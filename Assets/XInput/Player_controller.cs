@@ -17,13 +17,17 @@ public class Player_controller : MonoBehaviour
     private bool isOnGround;
     public float jumpHeight = 5.0f;
 
+    private GameObject hitobject;
+    private RaycastHit hit;
+    private float raydistance = 1.000001f;
+
     //punching 
     public GameObject fist;
     public float punchActiveSeconds = 2.0f;
     public float punchCoolDown = 2.0f;
     private bool punchCoolDownActive = false;
 
-    float Xrotation = 0.0f;
+    //float Xrotation = 0.0f;
     [SerializeField] XboxController controller = XboxController.All;
 
     // Start is called before the first frame update
@@ -52,46 +56,45 @@ public class Player_controller : MonoBehaviour
         rb = gameObject.GetComponent<Rigidbody>();
         fist.GetComponent<Collider>();
         fist.SetActive(false);
+        
     }
 
     // Update is called once per frame
     void Update()
     {
-        //isOnGround = Physics.CheckSphere(groundChecking.position, groundDistance, );
+        
 
         Vector3 moveInput = new Vector3(XCI.GetAxisRaw(XboxAxis.LeftStickX, Controller), 0.0f, XCI.GetAxisRaw(XboxAxis.LeftStickY, Controller));
         rb.AddForce(moveInput.normalized * moveSpeed);
-        //gameObject.GetComponent<Transform>().Rotate(Vector3.up * moveInput.x  * 5);
-        //gameObject.transform.rotation = Mathf.Clamp(Xrotation, 180, 0);
-        //Xrotation = Mathf.Clamp(Xrotation, 180.0f, 0.0f);
-        //transform.localRotation = Quaternion.Euler(0, Xrotation, 0);
-        //gameObject.GetComponent<Transform>().Rotate(Vector3.up * moveInput.x * 5);
+
+        int layerMask = 1 << 8;
 
         if (rb.velocity.magnitude > maxSpeed)
         {
             rb.AddForce(moveInput.normalized * -moveSpeed);
         }
-        if(XCI.GetButtonDown(XboxButton.A) && isOnGround)
+        if(XCI.GetButtonDown(XboxButton.A))
         {
-            rb.AddForce( new Vector3(0,  jumpHeight, 0), ForceMode.Impulse);
+            if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, raydistance))
+            {
+                hitobject = (hit.collider.gameObject);
+                if (hitobject.CompareTag("ground"))
+                {
+                    rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
+                }
+            }
         }
-        if(XCI.GetButtonDown(XboxButton.B) && punchCoolDownActive == false)
+        if (XCI.GetButtonDown(XboxButton.B) && punchCoolDownActive == false)
         {
             fist.SetActive(true);
             StartCoroutine(PunchWait());
             StartCoroutine(punchingCoolDown());
         }
-        
-        //transform.rotation = Quaternion.LookRotation(moveInput);
-        //if(XCI.GetAxisRaw(XboxAxis.RightStickX, controller) > 0.0f)
-        //{
-        //    transform.eulerAngles = new Vector3(0, 0, 0);
-        //}
-        //if (XCI.GetAxisRaw(XboxAxis.RightStickX, controller) < 0.0f)
-        //{
-        //    transform.eulerAngles = new Vector3(0, 180, 0);
-        //}
-        gameObject.transform.eulerAngles = new Vector3(0, (moveInput.x > 0 ? 180 : 0), 0);
+
+        else if (moveInput != Vector3.zero)
+        {
+            transform.rotation = Quaternion.LookRotation(new Vector3(moveInput.x, 0, 0));
+        }
     }
     
     private void OnTriggerEnter(Collider other)
