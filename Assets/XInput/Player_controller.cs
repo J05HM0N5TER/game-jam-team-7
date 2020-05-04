@@ -18,6 +18,7 @@ public class Player_controller : MonoBehaviour
 
     private GameObject hitobject;
     private RaycastHit hit;
+    
     private float raydistance = 1.000001f;
 
     //punching 
@@ -25,6 +26,9 @@ public class Player_controller : MonoBehaviour
     public float punchActiveSeconds = 2.0f;
     public float punchCoolDown = 2.0f;
     private bool punchCoolDownActive = false;
+
+    //stupid thing gets stuck on walls
+    private bool stuckOnWall;
 
 
     // Start is called before the first frame update
@@ -60,7 +64,11 @@ public class Player_controller : MonoBehaviour
     void Update()
     {
         Vector3 moveInput = new Vector3(XCI.GetAxisRaw(XboxAxis.LeftStickX, Controller), 0.0f, XCI.GetAxisRaw(XboxAxis.LeftStickY, Controller));
-        rb.AddForce(moveInput.normalized * moveSpeed);
+        if(!stuckOnWall)
+        {
+            rb.AddForce(moveInput.normalized * moveSpeed);
+        }
+        
 
         if (rb.velocity.magnitude > maxSpeed)
         {
@@ -76,6 +84,7 @@ public class Player_controller : MonoBehaviour
                     rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
                 }
             }
+            
         }
         if (XCI.GetButtonDown(XboxButton.B) && punchCoolDownActive == false)
         {
@@ -83,11 +92,37 @@ public class Player_controller : MonoBehaviour
             StartCoroutine(PunchWait());
             StartCoroutine(punchingCoolDown());
         }
-
         else if (moveInput != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(moveInput.x, 0, 0));
         }
+        //RaycastHit hit2;
+
+
+        //if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward), out hit, 0.6f))
+        //{
+        //    if (hitobject.CompareTag("ground"))
+        //    {
+        //        stuckOnWall = true;
+        //        rb.AddForce(new Vector3(0, -5, 0));
+        //    }
+
+        //}
+        //Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), 0.5f);
+        if (Physics.CapsuleCast(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), new Vector3(transform.position.x, transform.position.y + 0.5f, transform.position.z), 0.5f, transform.TransformDirection(-Vector3.forward), out hit, 0.6f))
+        {
+            hitobject = (hit.collider.gameObject);
+            if (hitobject.CompareTag("ground"))
+            {
+                stuckOnWall = true;
+                rb.AddForce(new Vector3(0, 0, 0), ForceMode.Impulse);
+            }
+        }
+        else
+        {
+            stuckOnWall = false;
+        }
+
     }
 
     IEnumerator PunchWait()
@@ -101,6 +136,10 @@ public class Player_controller : MonoBehaviour
         yield return new WaitForSeconds(punchCoolDown);
         punchCoolDownActive = false;
 
+    }
+    private void OnDrawGizmos()
+    {
+        Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), 0.5f);
     }
 
 

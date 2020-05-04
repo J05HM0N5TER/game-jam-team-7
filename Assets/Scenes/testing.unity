@@ -248,11 +248,10 @@ MonoBehaviour:
   Controller: 0
   moveSpeed: 10
   maxSpeed: 10
-  jumpHeight: 10
+  jumpHeight: 9
   fist: {fileID: 1693756084}
   punchActiveSeconds: 0.5
   punchCoolDown: 2
-  controller: 0
 --- !u!54 &630633873
 Rigidbody:
   m_ObjectHideFlags: 0
