@@ -14,7 +14,6 @@ public class Player_controller : MonoBehaviour
     
 
     //jumping
-    private bool isOnGround;
     public float jumpHeight = 5.0f;
 
     private GameObject hitobject;
@@ -27,8 +26,8 @@ public class Player_controller : MonoBehaviour
     public float punchCoolDown = 2.0f;
     private bool punchCoolDownActive = false;
 
-    //float Xrotation = 0.0f;
-    [SerializeField] XboxController controller = XboxController.All;
+    
+    
 
     // Start is called before the first frame update
     void Start()
@@ -62,12 +61,8 @@ public class Player_controller : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
-
         Vector3 moveInput = new Vector3(XCI.GetAxisRaw(XboxAxis.LeftStickX, Controller), 0.0f, XCI.GetAxisRaw(XboxAxis.LeftStickY, Controller));
         rb.AddForce(moveInput.normalized * moveSpeed);
-
-        int layerMask = 1 << 8;
 
         if (rb.velocity.magnitude > maxSpeed)
         {
@@ -94,26 +89,6 @@ public class Player_controller : MonoBehaviour
         else if (moveInput != Vector3.zero)
         {
             transform.rotation = Quaternion.LookRotation(new Vector3(moveInput.x, 0, 0));
-        }
-    }
-    
-    private void OnTriggerEnter(Collider other)
-    {
-        if(other.CompareTag("ground"))
-        {
-            isOnGround = true;
-        }
-        else
-        {
-            isOnGround = false;
-        }
-        
-    }
-    private void OnTriggerExit(Collider other)
-    {
-        if(other.CompareTag("ground"))
-        {
-            isOnGround = false;
         }
     }
 
