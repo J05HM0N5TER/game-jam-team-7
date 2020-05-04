@@ -332,7 +332,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1627575413}
-        m_MethodName: loadWinScreen
+        m_MethodName: loadGame
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -881,7 +881,7 @@ MonoBehaviour:
   player1Points: 0
   player2Points: 0
   mainMenuScene: Main Menu
-  gameScene: 
+  gameScene: testing
   winScreen: Win Screen
 --- !u!4 &1627575414
 Transform:
