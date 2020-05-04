@@ -26,8 +26,6 @@ public class Player_controller : MonoBehaviour
     public float punchCoolDown = 2.0f;
     private bool punchCoolDownActive = false;
 
-    
-    
 
     // Start is called before the first frame update
     void Start()
