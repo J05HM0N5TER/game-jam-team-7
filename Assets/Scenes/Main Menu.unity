@@ -881,7 +881,7 @@ MonoBehaviour:
   player1Points: 0
   player2Points: 0
   mainMenuScene: Main Menu
-  gameScene: testing
+  gameScene: testBuild
   winScreen: Win Screen
 --- !u!4 &1627575414
 Transform:
