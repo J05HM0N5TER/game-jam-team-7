@@ -262,6 +262,10 @@ MonoBehaviour:
   humanPunchVolume: 1
   demonPunchSound: {fileID: 8300000, guid: e14679dae83f8c24f8f855c560e011c3, type: 3}
   demonPunchVolume: 1
+  humanHurtSound: {fileID: 8300000, guid: 1234ad249295bda40bfad9ed61fdc18d, type: 3}
+  humanHurtVolume: 1
+  demonHurtSound: {fileID: 8300000, guid: 707ce46f08e3d4d42897dcec4ef0c031, type: 3}
+  demonHurtVolume: 1
 --- !u!82 &6685508744821521949
 AudioSource:
   m_ObjectHideFlags: 0

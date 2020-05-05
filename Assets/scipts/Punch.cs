@@ -22,6 +22,7 @@ public class Punch : MonoBehaviour
         {
             float xRotation = -Vector3.Normalize(transform.parent.position - transform.position).x;
             other.GetComponent<Rigidbody>().AddForce(new Vector3(xRotation * punchForce, 0, 0), ForceMode.Impulse);
+            other.GetComponent<Player_controller>().playHurtSounds();
         }
     }
 }
