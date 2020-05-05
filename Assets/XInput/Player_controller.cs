@@ -29,10 +29,28 @@ public class Player_controller : MonoBehaviour
 	private float castHeight = .5f;
 	private float castDistance = .6f;
 
+	[Header("footstep Settings")]
+	AudioSource Audio;
+	public AudioClip footStepSound;
+	public float footStepVolume = 1.0f;
+	public float footStepPlayDelay = 0.1f;
+	private bool canPlayFootStep = true;
+
+	[Header("Punch Settings")]
+	public bool isDemon;
+	public AudioClip humanPunchSound;
+	public float humanPunchVolume = 1.0f;
+	public AudioClip demonPunchSound;
+	public float demonPunchVolume = 1.0f;
+
+
 
 	// Start is called before the first frame update
 	void Start()
 	{
+		// sounds 
+		Audio = gameObject.GetComponent<AudioSource>();
+
 		if (!CheckNumControlers)
 		{
 			CheckNumControlers = true;
@@ -57,6 +75,8 @@ public class Player_controller : MonoBehaviour
 		fist.GetComponent<Collider>();
 		fist.SetActive(false);
 
+		
+
 	}
 
 	// Update is called once per frame
@@ -77,20 +97,35 @@ public class Player_controller : MonoBehaviour
 			{
 				// Move the player
 				rb.AddForce(moveInput.normalized * moveSpeed);
+				//Audio.PlayOneShot(footStepSound, footStepVolume);
+				if(canPlayFootStep && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), groundCheckDistance))
+				{
+					canPlayFootStep = false;
+					StartCoroutine(playsound());
+				}
 			}
 		}
-
+		
 		// Jump
 		if (XCI.GetButtonDown(XboxButton.A, controller) && // Pressed jump button
 			Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), groundCheckDistance)) // On the ground
 		{
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
+		
 
 		// Punch
 		if (XCI.GetButtonDown(XboxButton.B, controller) && punchCoolDownActive == false)
 		{
 			fist.SetActive(true);
+			if(!isDemon)
+			{
+				Audio.PlayOneShot(humanPunchSound, humanPunchVolume);
+			}
+			if(isDemon)
+			{
+				Audio.PlayOneShot(demonPunchSound, demonPunchVolume);
+			}
 			StartCoroutine(PunchWait());
 			StartCoroutine(punchingCoolDown());
 		}
@@ -111,6 +146,17 @@ public class Player_controller : MonoBehaviour
 	private void OnDrawGizmos()
 	{
 		Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), 0.5f);
+	}
+	//void playsound()
+	//{
+	//	//Audio.PlayOneShot(footStepSound, footStepVolume);
+		
+	//}
+	IEnumerator playsound()
+	{
+		Audio.PlayOneShot(footStepSound);
+		yield return new WaitForSeconds(footStepPlayDelay);
+		canPlayFootStep = true;
 	}
 
 

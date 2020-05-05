@@ -17,14 +17,14 @@ public class GameManager : MonoBehaviour
 
     [Header("Sound Settings")]
     AudioSource Audio;
-    public AudioClip meteorTravel;
-    public float meteorTravelVolume = 1.0f;
+    public AudioClip MeteorImpactSound;
+    public float MeteorImpactVolume = 1.0f;
 
 
     // Start is called before the first frame update
     void Start()
     {
-        Audio = gameObject.GetComponent<AudioSource>();
+        //Audio = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -49,10 +49,10 @@ public class GameManager : MonoBehaviour
         canSpawnMeteor = true;
 
     }
-    void playsounds()
+    public void playMeteorImpact()
     {
         
-        //Audio.PlayOneShot(meteorTravel, meteorTravelVolume);
+        Audio.PlayOneShot(MeteorImpactSound, MeteorImpactVolume);
         
     }
     void playanothersound()

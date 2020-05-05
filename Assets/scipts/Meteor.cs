@@ -5,7 +5,7 @@ using UnityEngine;
 public class Meteor : MonoBehaviour
 {
     //this is to allow this script to call functions from gamemanager so can play sounds
-    public GameObject gamemanager;
+    //public GameObject gamemanager;
     private float lifetime = 10.0f;
 
     [Header("Sound Settings")]
@@ -21,7 +21,7 @@ public class Meteor : MonoBehaviour
     }
     void Start()
     {
-        //gamemanager.GetComponent<GameManager>();
+        
         Audio = gameObject.GetComponent<AudioSource>();
         Destroy(gameObject, lifetime);
     }
@@ -34,7 +34,10 @@ public class Meteor : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
+        
         Audio.Stop();
+        //gamemanager.GetComponent<GameManager>().playMeteorImpact();
+        
         Destroy(gameObject);
     }
     public void playsound()
