@@ -9,6 +9,7 @@ public class Meteor : MonoBehaviour
     private float lifetime = 10.0f;
 
     [Header("Sound Settings")]
+    GameManager gameManager;
     AudioSource Audio;
     public AudioClip meteorTravel;
     public float meteorTravelVolume = 1.0f;
@@ -36,7 +37,7 @@ public class Meteor : MonoBehaviour
     {
         
         Audio.Stop();
-        //gamemanager.GetComponent<GameManager>().playMeteorImpact();
+        //gameManager.GetComponent<GameManager>().playMeteorImpact();
         
         Destroy(gameObject);
     }
