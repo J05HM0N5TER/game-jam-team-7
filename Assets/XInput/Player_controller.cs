@@ -6,7 +6,7 @@ using XboxCtrlrInput;
 
 public class Player_controller : MonoBehaviour
 {
-	[SerializeField] XboxController Controller = XboxController.All;
+	[SerializeField] XboxController controller = XboxController.All;
 	private bool CheckNumControlers;
 	private Rigidbody rb;
 
@@ -17,7 +17,7 @@ public class Player_controller : MonoBehaviour
 
 	[Header("Jumping settings")]
 	public float jumpHeight = 5.0f;
-	private float raydistance = 1.000001f;
+	public float groundCheckDistance = 1.000001f;
 
 	[Header("Punch settings")]
 	public GameObject fist;
@@ -62,7 +62,9 @@ public class Player_controller : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-		Vector3 moveInput = new Vector3(XCI.GetAxisRaw(XboxAxis.LeftStickX, Controller), 0.0f, XCI.GetAxisRaw(XboxAxis.LeftStickY, Controller));
+		LayerMask ground = 1 << 7;
+
+		Vector3 moveInput = new Vector3(XCI.GetAxisRaw(XboxAxis.LeftStickX, controller), 0.0f, XCI.GetAxisRaw(XboxAxis.LeftStickY, controller));
 
 		// If they have move input
 		if (moveInput != Vector3.zero)
@@ -71,7 +73,7 @@ public class Player_controller : MonoBehaviour
 			transform.rotation = Quaternion.LookRotation(new Vector3(moveInput.x, 0, 0));
 
 			if (!(rb.velocity.magnitude > maxSpeed) && // Player is not moving too fast
-				!Physics.SphereCast(transform.position, castHeight, transform.forward, out _))
+				!Physics.SphereCast(transform.position, castHeight, transform.forward, out _, castDistance, ground))
 			{
 				// Move the player
 				rb.AddForce(moveInput.normalized * moveSpeed);
@@ -79,24 +81,14 @@ public class Player_controller : MonoBehaviour
 		}
 
 		// Jump
-		if (XCI.GetButtonDown(XboxButton.A))
+		if (XCI.GetButtonDown(XboxButton.A, controller) && // Pressed jump button
+			Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), groundCheckDistance)) // On the ground
 		{
-			RaycastHit hit;
-			// Check if they are on the ground
-			if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), out hit, raydistance))
-			{
-				GameObject hitobject;
-				hitobject = (hit.collider.gameObject);
-				if (hitobject.CompareTag("ground"))
-				{
-					rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
-				}
-			}
-
+			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
 		}
 
 		// Punch
-		if (XCI.GetButtonDown(XboxButton.B) && punchCoolDownActive == false)
+		if (XCI.GetButtonDown(XboxButton.B, controller) && punchCoolDownActive == false)
 		{
 			fist.SetActive(true);
 			StartCoroutine(PunchWait());
