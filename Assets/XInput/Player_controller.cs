@@ -36,12 +36,19 @@ public class Player_controller : MonoBehaviour
 	public float footStepPlayDelay = 0.1f;
 	private bool canPlayFootStep = true;
 
-	[Header("Punch Settings")]
+	[Header("Punch Sound Settings")]
 	public bool isDemon;
 	public AudioClip humanPunchSound;
 	public float humanPunchVolume = 1.0f;
 	public AudioClip demonPunchSound;
 	public float demonPunchVolume = 1.0f;
+
+	[Header("Hurt Sound Settings")]
+	public AudioClip humanHurtSound;
+	public float humanHurtVolume = 1.0f;
+	public AudioClip demonHurtSound;
+	public float demonHurtVolume = 1.0f;
+
 
 
 
@@ -143,21 +150,30 @@ public class Player_controller : MonoBehaviour
 		punchCoolDownActive = false;
 
 	}
-	private void OnDrawGizmos()
-	{
-		Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - 0.5f, transform.position.z), 0.5f);
-	}
+	
 	//void playsound()
 	//{
 	//	//Audio.PlayOneShot(footStepSound, footStepVolume);
 		
 	//}
+	public void playHurtSounds()
+	{
+		if(!isDemon)
+		{
+			Audio.PlayOneShot(humanHurtSound, humanHurtVolume);
+		}
+		if(isDemon)
+		{
+			Audio.PlayOneShot(demonHurtSound, demonHurtVolume);
+		}
+	}
 	IEnumerator playsound()
 	{
 		Audio.PlayOneShot(footStepSound);
 		yield return new WaitForSeconds(footStepPlayDelay);
 		canPlayFootStep = true;
 	}
+	
 
 
 }
