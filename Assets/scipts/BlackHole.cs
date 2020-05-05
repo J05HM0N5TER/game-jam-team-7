@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using XboxCtrlrInput;
 public class BlackHole : MonoBehaviour
 {
     private GameObject[] players;
@@ -15,18 +15,27 @@ public class BlackHole : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        foreach (var player in players)
+        if(players != null)
         {
-            player.gameObject.GetComponent<Rigidbody>().AddForce((gameObject.transform.position - player.GetComponent<Transform>().position) * blackHolePullSpeed);
+            foreach (var player in players)
+            {
+                player.gameObject.GetComponent<Rigidbody>().AddForce((gameObject.transform.position - player.GetComponent<Transform>().position) * blackHolePullSpeed);
+            }
         }
+        
     }
     private void OnCollisionEnter(Collision collision)
     {
         GameObject collidedObject = collision.gameObject;
        
-        if(collidedObject.CompareTag("player"))
+        if(collidedObject.CompareTag("Player"))
         {
-            Destroy(collidedObject);
+            SceneController sceneController = FindObjectOfType<SceneController>();
+            XboxController playerController = collidedObject.GetComponent<Player_controller>().controller;
+            // Add win to player
+            sceneController.AddWinToPlayer(playerController);
+            // Reload game
+            sceneController.loadGame();
         }
     }
 }

@@ -123,9 +123,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3de1d0a5aa247e544ba013761d414f9c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gamemanager: {fileID: 0}
   meteorTravel: {fileID: 8300000, guid: 0fe9e31e0857479489791ff18b374506, type: 3}
   meteorTravelVolume: 1
+  particle: {fileID: 110462940427955046}
 --- !u!82 &110462940427955049
 AudioSource:
   m_ObjectHideFlags: 0
