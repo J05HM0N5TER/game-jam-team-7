@@ -9,9 +9,13 @@ public class Meteor : MonoBehaviour
     private float lifetime = 10.0f;
 
     [Header("Sound Settings")]
+    GameManager gameManager;
     AudioSource Audio;
     public AudioClip meteorTravel;
     public float meteorTravelVolume = 1.0f;
+
+    [Header("Particle Settings")]
+    public GameObject particle;
 
 
     // Start is called before the first frame update
@@ -34,9 +38,9 @@ public class Meteor : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        
+        Instantiate(particle, gameObject.transform);
         Audio.Stop();
-        //gamemanager.GetComponent<GameManager>().playMeteorImpact();
+        //gameManager.GetComponent<GameManager>().playMeteorImpact();
         
         Destroy(gameObject);
     }

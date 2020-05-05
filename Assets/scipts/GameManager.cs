@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         players = GameObject.FindGameObjectsWithTag("Player");
-        //Audio = gameObject.GetComponent<AudioSource>();
+        Audio = gameObject.GetComponent<AudioSource>();
     }
 
     // Update is called once per frame

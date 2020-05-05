@@ -99,7 +99,7 @@ public class Player_controller : MonoBehaviour
 			// Face in correct direction
 			transform.rotation = Quaternion.LookRotation(new Vector3(moveInput.x, 0, 0));
 
-			if (!(rb.velocity.magnitude > maxSpeed) && // Player is not moving too fast
+			if ( // Player is not moving too fast
 				!Physics.SphereCast(transform.position, castHeight, transform.forward, out _, castDistance, ground))
 			{
 				// Move the player
@@ -110,6 +110,10 @@ public class Player_controller : MonoBehaviour
 					canPlayFootStep = false;
 					StartCoroutine(playsound());
 				}
+			}
+			if((rb.velocity.magnitude >= maxSpeed))
+			{
+				rb.AddForce(moveInput.normalized * -moveSpeed);
 			}
 		}
 		
