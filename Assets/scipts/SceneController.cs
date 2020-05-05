@@ -3,12 +3,12 @@ using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using XboxCtrlrInput;
 
 public class SceneController : MonoBehaviour
 {
 	[Header("Player scores")]
-	public uint player1Points = 0;
-	public uint player2Points = 0;
+	List<int> playerScores = new List<int>();
 
 	[Header("Scene names")]
 	// The name of the scene with the main menu
@@ -38,6 +38,11 @@ public class SceneController : MonoBehaviour
 	private void Awake()
 	{
 		DontDestroyOnLoad(this.gameObject);
+		for (int i = 0; i < 4; i++)
+		{
+			playerScores.Add(0);
+		}
+		instance = this;
 	}
 
 	/// <summary>
@@ -83,5 +88,26 @@ public class SceneController : MonoBehaviour
 	{
 		print("Quitting game");
 		Application.Quit();
+	}
+
+	public int GetPlayerScore(XboxController player)
+	{
+		if ((int)player > playerScores.Count || (int)player < 0)
+			return -1;
+		return playerScores[(int)player - 1];
+	}
+
+	public void SetPlayerScore(XboxController player, int newScore)
+	{
+		if ((int)player > playerScores.Count || (int)player < 0)
+			return;
+		playerScores[(int)player - 1] = newScore;
+	}
+
+	public void AddWinToPlayer(XboxController player)
+	{
+		if ((int)player > playerScores.Count || (int)player < 0)
+			return;
+		playerScores[(int)player - 1]--;
 	}
 }

@@ -6,7 +6,7 @@ using XboxCtrlrInput;
 
 public class Player_controller : MonoBehaviour
 {
-	[SerializeField] XboxController controller = XboxController.All;
+	public XboxController controller = XboxController.All;
 	private bool CheckNumControlers;
 	private Rigidbody rb;
 
