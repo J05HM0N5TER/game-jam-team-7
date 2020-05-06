@@ -127,7 +127,7 @@ public class GameManager : MonoBehaviour
             GameObject currentUI = demonLives[i].gameObject;
             currentUI.SetActive(i < playerRoundScores[0]);
         }
-        Transform[] humanLives = DemonUI.GetComponentsInChildren<Transform>();
+        Transform[] humanLives = HumanUI.GetComponentsInChildren<Transform>();
         for (int i = 0; i < humanLives.Length; i++)
         {
             GameObject currentUI = humanLives[i].gameObject;
