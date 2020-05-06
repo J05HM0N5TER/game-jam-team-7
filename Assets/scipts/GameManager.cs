@@ -21,12 +21,21 @@ public class GameManager : MonoBehaviour
     public AudioSource Audio;
     public AudioClip MeteorImpactSound;
     public float MeteorImpactVolume = 1.0f;
+    public List<int> playerRoundScores;
+    public int defaultLeves = 3;
+    private SceneController sceneController;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        sceneController = FindObjectOfType<SceneController>();
         players = GameObject.FindGameObjectsWithTag("Player");
+        playerRoundScores = new List<int>();
+        for (int i = 0; i < players.Length; i++)
+        {
+            playerRoundScores.Add(defaultLeves);
+        }
         Audio = gameObject.GetComponent<AudioSource>();
     }
 
@@ -51,10 +60,9 @@ public class GameManager : MonoBehaviour
         {
             if (player.transform.position.y < killBarrierY)
             {
-                SceneController sceneController = FindObjectOfType<SceneController>();
                 XboxController playerController = player.GetComponent<Player_controller>().controller;
                 // Add win to player
-                sceneController.AddWinToPlayer(playerController);
+                sceneController.AddMatchLossToPlayer(playerController);
                 // Reload game
                 sceneController.loadGame();
             }
@@ -79,4 +87,25 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void AddRoundLossToPlayer(XboxController player)
+    {
+        int playerNumber = (int)player - 1;
+        playerRoundScores[playerNumber]--;
+        if (playerRoundScores[playerNumber] <= 0)
+        {
+            sceneController.AddMatchLossToPlayer(player);
+        }
+        else
+        {
+            foreach (var currectPlayer in players)
+            {
+
+                Player_controller playerController = currectPlayer.GetComponent<Player_controller>();
+                if (playerController.controller == player)
+                {
+                    currectPlayer.transform.position = Vector3.zero;
+                }
+            }
+        }
+    }
 }
