@@ -8,7 +8,7 @@ using XboxCtrlrInput;
 public class SceneController : MonoBehaviour
 {
 	[Header("Player scores")]
-	List<int> playerScores = new List<int>();
+	List<int> playerMatchScores = new List<int>();
 
 	[Header("Scene names")]
 	// The name of the scene with the main menu
@@ -17,6 +17,8 @@ public class SceneController : MonoBehaviour
 	public string gameScene;
 	// The name of the scene with the win screen
 	public string winScreen = "Win Screen";
+	public XboxController previousLoss = XboxController.All;
+	public int winAmount = 3;
 
 	// The instance of this singleton
 	private static SceneController instance = null;
@@ -40,7 +42,7 @@ public class SceneController : MonoBehaviour
 		DontDestroyOnLoad(this.gameObject);
 		for (int i = 0; i < 4; i++)
 		{
-			playerScores.Add(0);
+			playerMatchScores.Add(0);
 		}
 		instance = this;
 	}
@@ -92,22 +94,31 @@ public class SceneController : MonoBehaviour
 
 	public int GetPlayerScore(XboxController player)
 	{
-		if ((int)player > playerScores.Count || (int)player < 0)
+		if ((int)player > playerMatchScores.Count || (int)player < 0)
 			return -1;
-		return playerScores[(int)player - 1];
+		return playerMatchScores[(int)player - 1];
 	}
 
 	public void SetPlayerScore(XboxController player, int newScore)
 	{
-		if ((int)player > playerScores.Count || (int)player < 0)
+		if ((int)player > playerMatchScores.Count || (int)player < 0)
 			return;
-		playerScores[(int)player - 1] = newScore;
+		playerMatchScores[(int)player - 1] = newScore;
 	}
 
-	public void AddWinToPlayer(XboxController player)
+	public void AddMatchLossToPlayer(XboxController player)
 	{
-		if ((int)player > playerScores.Count || (int)player < 0)
+		if ((int)player > playerMatchScores.Count || (int)player < 0)
 			return;
-		playerScores[(int)player - 1]--;
+		playerMatchScores[(int)player - 1]++;
+		previousLoss = player;
+		loadWinScreen();
+	}
+	public void ResetScores()
+	{
+		for (int i = 0; i < playerMatchScores.Count; i++)
+		{
+			playerMatchScores[i] = winAmount;
+		}
 	}
 }

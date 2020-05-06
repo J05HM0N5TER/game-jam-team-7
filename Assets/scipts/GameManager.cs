@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using XboxCtrlrInput;
@@ -16,17 +17,28 @@ public class GameManager : MonoBehaviour
     [Header("Death settings")]
     public float killBarrierY = -10f;
     private GameObject[] players;
+    public GameObject DemonUI;
+    public GameObject HumanUI;
 
     [Header("Sound Settings")]
     public AudioSource Audio;
     public AudioClip MeteorImpactSound;
     public float MeteorImpactVolume = 1.0f;
+    public List<int> playerRoundScores;
+    public int defaultLeves = 3;
+    private SceneController sceneController;
 
 
     // Start is called before the first frame update
     void Start()
     {
+        sceneController = FindObjectOfType<SceneController>();
         players = GameObject.FindGameObjectsWithTag("Player");
+        playerRoundScores = new List<int>();
+        for (int i = 0; i < players.Length; i++)
+        {
+            playerRoundScores.Add(defaultLeves);
+        }
         Audio = gameObject.GetComponent<AudioSource>();
     }
 
@@ -36,9 +48,9 @@ public class GameManager : MonoBehaviour
         if(canSpawnMeteor)
         {
             // Get random player to aim for
-            GameObject player = players[Random.Range(0, players.Length)];
+            GameObject player = players[UnityEngine.Random.Range(0, players.Length)];
             // Create random position to spawn meteor
-            Vector3 randomPos = Random.insideUnitCircle * sizeOfSpawnRadius;
+            Vector3 randomPos = UnityEngine.Random.insideUnitCircle * sizeOfSpawnRadius;
             randomPos += randomPos.normalized * minDistanceFromCentr;
             // Create meteor at new random position
             GameObject newMeteor =  Instantiate(meteorPrefab, randomPos, Quaternion.identity);
@@ -51,12 +63,11 @@ public class GameManager : MonoBehaviour
         {
             if (player.transform.position.y < killBarrierY)
             {
-                SceneController sceneController = FindObjectOfType<SceneController>();
                 XboxController playerController = player.GetComponent<Player_controller>().controller;
                 // Add win to player
-                sceneController.AddWinToPlayer(playerController);
+                AddRoundLossToPlayer(playerController);
                 // Reload game
-                sceneController.loadGame();
+                //sceneController.loadGame();
             }
         }
 
@@ -79,4 +90,42 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public void AddRoundLossToPlayer(XboxController player)
+    {
+        UpdateUI();
+        int playerNumber = (int)player - 1;
+        playerRoundScores[playerNumber]--;
+        if (playerRoundScores[playerNumber] <= 0)
+        {
+            sceneController.AddMatchLossToPlayer(player);
+        }
+        else
+        {
+            foreach (var currectPlayer in players)
+            {
+
+                Player_controller playerController = currectPlayer.GetComponent<Player_controller>();
+                if (playerController.controller == player)
+                {
+                    playerController.playerRespawn();
+                }
+            }
+        }
+    }
+
+    public void UpdateUI()
+    {
+        Transform[] demonLives = DemonUI.GetComponentsInChildren<Transform>();
+        for (int i = 0; i < demonLives.Length; i++)
+        {
+            GameObject currentUI = demonLives[i].gameObject;
+            currentUI.SetActive(i < playerRoundScores[0]);
+        }
+        Transform[] humanLives = DemonUI.GetComponentsInChildren<Transform>();
+        for (int i = 0; i < humanLives.Length; i++)
+        {
+            GameObject currentUI = humanLives[i].gameObject;
+            currentUI.SetActive(i < playerRoundScores[1]);
+        }
+    }
 }

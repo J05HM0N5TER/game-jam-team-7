@@ -30,12 +30,8 @@ public class BlackHole : MonoBehaviour
        
         if(collidedObject.CompareTag("Player"))
         {
-            SceneController sceneController = FindObjectOfType<SceneController>();
-            XboxController playerController = collidedObject.GetComponent<Player_controller>().controller;
-            // Add win to player
-            sceneController.AddWinToPlayer(playerController);
-            // Reload game
-            sceneController.loadGame();
+            // Add win 
+            FindObjectOfType<GameManager>().AddRoundLossToPlayer(collidedObject.GetComponent<Player_controller>().controller);
         }
     }
 }
