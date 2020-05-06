@@ -24,6 +24,7 @@ public class Player_controller : MonoBehaviour
 	public float punchActiveSeconds = 2.0f;
 	public float punchCoolDown = 2.0f;
 	private bool punchCoolDownActive = false;
+	
 
 	// Capsule cast stuff
 	private float castHeight = .5f;
@@ -50,14 +51,17 @@ public class Player_controller : MonoBehaviour
 	public float demonHurtVolume = 1.0f;
 
 
+	private Vector3 playerSpawnPoint;
 
+	public ParticleSystem bloodSplatter;
+	private Animator animator;
 
 	// Start is called before the first frame update
 	void Start()
 	{
 		// sounds 
 		Audio = gameObject.GetComponent<AudioSource>();
-
+		animator = gameObject.GetComponent<Animator>();
 		if (!CheckNumControlers)
 		{
 			CheckNumControlers = true;
@@ -82,7 +86,9 @@ public class Player_controller : MonoBehaviour
 		fist.GetComponent<Collider>();
 		fist.SetActive(false);
 
-		
+
+		playerSpawnPoint = gameObject.GetComponent<Transform>().position;
+		bloodSplatter = bloodSplatter.GetComponentInChildren<ParticleSystem>();
 
 	}
 
@@ -108,7 +114,12 @@ public class Player_controller : MonoBehaviour
 				if(canPlayFootStep && Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), groundCheckDistance))
 				{
 					canPlayFootStep = false;
+					animator.SetBool("isRunning", true);
 					StartCoroutine(playsound());
+				}
+				else
+				{
+					animator.SetBool("isRunning", false);
 				}
 			}
 			if((rb.velocity.magnitude >= maxSpeed))
@@ -121,13 +132,22 @@ public class Player_controller : MonoBehaviour
 		if (XCI.GetButtonDown(XboxButton.A, controller) && // Pressed jump button
 			Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), groundCheckDistance)) // On the ground
 		{
+			
 			rb.AddForce(new Vector3(0, jumpHeight, 0), ForceMode.Impulse);
+			animator.SetBool("Jumping", true);
+			
 		}
+		if(Physics.Raycast(transform.position, transform.TransformDirection(Vector3.down), groundCheckDistance))
+		{
+			animator.SetBool("Jumping", false);
+		}
+		
 		
 
 		// Punch
 		if (XCI.GetButtonDown(XboxButton.B, controller) && punchCoolDownActive == false)
 		{
+			animator.SetBool("punching", true);
 			fist.SetActive(true);
 			if(!isDemon)
 			{
@@ -145,6 +165,7 @@ public class Player_controller : MonoBehaviour
 	IEnumerator PunchWait()
 	{
 		yield return new WaitForSeconds(punchActiveSeconds);
+		animator.SetBool("punching", false);
 		fist.SetActive(false);
 	}
 	IEnumerator punchingCoolDown()
@@ -165,10 +186,12 @@ public class Player_controller : MonoBehaviour
 		if(!isDemon)
 		{
 			Audio.PlayOneShot(humanHurtSound, humanHurtVolume);
+			StartCoroutine(playblood());
 		}
 		if(isDemon)
 		{
 			Audio.PlayOneShot(demonHurtSound, demonHurtVolume);
+			StartCoroutine(playblood());
 		}
 	}
 	IEnumerator playsound()
@@ -176,6 +199,17 @@ public class Player_controller : MonoBehaviour
 		Audio.PlayOneShot(footStepSound);
 		yield return new WaitForSeconds(footStepPlayDelay);
 		canPlayFootStep = true;
+	}
+	public void playerRespawn()
+	{
+		gameObject.transform.position = playerSpawnPoint;
+		rb.velocity = Vector3.zero;
+	}
+	IEnumerator playblood()
+	{
+		bloodSplatter.Play();
+		yield return new WaitForSeconds(2);
+		bloodSplatter.Stop();
 	}
 	
 

@@ -116,7 +116,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   meteorTravel: {fileID: 8300000, guid: 0fe9e31e0857479489791ff18b374506, type: 3}
   meteorTravelVolume: 1
-  particle: {fileID: 110462940427955046}
+  particle: {fileID: 6502947804679140112, guid: dacead7a363be40a883768e893605687,
+    type: 3}
 --- !u!82 &110462940427955049
 AudioSource:
   m_ObjectHideFlags: 0
