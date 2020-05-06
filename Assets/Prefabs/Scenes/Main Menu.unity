@@ -879,7 +879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuScene: Main Menu
-  gameScene: FinalBuild
+  gameScene: testBuild
   winScreen: Win Screen
   previousWinner: 0
   winAmount: 3

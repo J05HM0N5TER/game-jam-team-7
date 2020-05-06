@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using XboxCtrlrInput;
@@ -16,6 +17,8 @@ public class GameManager : MonoBehaviour
     [Header("Death settings")]
     public float killBarrierY = -10f;
     private GameObject[] players;
+    public GameObject DemonUI;
+    public GameObject HumanUI;
 
     [Header("Sound Settings")]
     public AudioSource Audio;
@@ -45,9 +48,9 @@ public class GameManager : MonoBehaviour
         if(canSpawnMeteor)
         {
             // Get random player to aim for
-            GameObject player = players[Random.Range(0, players.Length)];
+            GameObject player = players[UnityEngine.Random.Range(0, players.Length)];
             // Create random position to spawn meteor
-            Vector3 randomPos = Random.insideUnitCircle * sizeOfSpawnRadius;
+            Vector3 randomPos = UnityEngine.Random.insideUnitCircle * sizeOfSpawnRadius;
             randomPos += randomPos.normalized * minDistanceFromCentr;
             // Create meteor at new random position
             GameObject newMeteor =  Instantiate(meteorPrefab, randomPos, Quaternion.identity);
@@ -62,9 +65,9 @@ public class GameManager : MonoBehaviour
             {
                 XboxController playerController = player.GetComponent<Player_controller>().controller;
                 // Add win to player
-                sceneController.AddMatchLossToPlayer(playerController);
+                AddRoundLossToPlayer(playerController);
                 // Reload game
-                sceneController.loadGame();
+                //sceneController.loadGame();
             }
         }
 
@@ -106,6 +109,17 @@ public class GameManager : MonoBehaviour
                     currectPlayer.transform.position = Vector3.zero;
                 }
             }
+        }
+    }
+
+    public void UpdateUI()
+    {
+        Transform[] demonLives = DemonUI.GetComponentsInChildren<Transform>();
+        foreach (var life in demonLives)
+        {
+            GameObject currentUI = life.gameObject;
+            // Set active depending on amount of lives left
+            currentUI.SetActive(Convert.ToInt32(currentUI.name) < playerRoundScores[0]);
         }
     }
 }
