@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using System.Net.Sockets;
 using UnityEngine;
 
 public class Meteor : MonoBehaviour
@@ -38,10 +39,12 @@ public class Meteor : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        Instantiate(particle, gameObject.transform);
+        //Vector3 currentpos = gameObject.transform.position; 
+        Instantiate(particle, gameObject.transform, true);
+        //Instantiate(,  )
         Audio.Stop();
         //gameManager.GetComponent<GameManager>().playMeteorImpact();
-        
+        //Time.timeScale = 0;
         Destroy(gameObject);
     }
     public void playsound()
