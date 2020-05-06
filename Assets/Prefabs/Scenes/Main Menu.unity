@@ -878,11 +878,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c1eaa62198183c049997a748a950c017, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player1Points: 0
-  player2Points: 0
   mainMenuScene: Main Menu
   gameScene: testBuild
   winScreen: Win Screen
+  previousWinner: 0
+  winAmount: 3
 --- !u!4 &1627575414
 Transform:
   m_ObjectHideFlags: 0
