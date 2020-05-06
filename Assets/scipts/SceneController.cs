@@ -17,7 +17,7 @@ public class SceneController : MonoBehaviour
 	public string gameScene;
 	// The name of the scene with the win screen
 	public string winScreen = "Win Screen";
-	public XboxController previousWinner = XboxController.All;
+	public XboxController previousLoss = XboxController.All;
 	public int winAmount = 3;
 
 	// The instance of this singleton
@@ -111,7 +111,7 @@ public class SceneController : MonoBehaviour
 		if ((int)player > playerMatchScores.Count || (int)player < 0)
 			return;
 		playerMatchScores[(int)player - 1]++;
-		previousWinner = player;
+		previousLoss = player;
 		loadWinScreen();
 	}
 	public void ResetScores()

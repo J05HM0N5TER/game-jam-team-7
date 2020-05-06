@@ -476,8 +476,8 @@ MonoBehaviour:
   minDistanceFromCentr: 20
   meteorSpeed: 1
   killBarrierY: -10
-  DemonUI: {fileID: 0}
-  HumanUI: {fileID: 0}
+  DemonUI: {fileID: 7024610658293554152}
+  HumanUI: {fileID: 7024610656966459541}
   Audio: {fileID: 0}
   MeteorImpactSound: {fileID: 0}
   MeteorImpactVolume: 1

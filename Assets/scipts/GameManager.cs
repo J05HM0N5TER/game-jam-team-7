@@ -92,6 +92,7 @@ public class GameManager : MonoBehaviour
 
     public void AddRoundLossToPlayer(XboxController player)
     {
+        UpdateUI();
         int playerNumber = (int)player - 1;
         playerRoundScores[playerNumber]--;
         if (playerRoundScores[playerNumber] <= 0)
@@ -106,7 +107,7 @@ public class GameManager : MonoBehaviour
                 Player_controller playerController = currectPlayer.GetComponent<Player_controller>();
                 if (playerController.controller == player)
                 {
-                    currectPlayer.transform.position = Vector3.zero;
+                    playerController.playerRespawn();
                 }
             }
         }
@@ -115,11 +116,16 @@ public class GameManager : MonoBehaviour
     public void UpdateUI()
     {
         Transform[] demonLives = DemonUI.GetComponentsInChildren<Transform>();
-        foreach (var life in demonLives)
+        for (int i = 0; i < demonLives.Length; i++)
         {
-            GameObject currentUI = life.gameObject;
-            // Set active depending on amount of lives left
-            currentUI.SetActive(Convert.ToInt32(currentUI.name) < playerRoundScores[0]);
+            GameObject currentUI = demonLives[i].gameObject;
+            currentUI.SetActive(i < playerRoundScores[0]);
+        }
+        Transform[] humanLives = DemonUI.GetComponentsInChildren<Transform>();
+        for (int i = 0; i < humanLives.Length; i++)
+        {
+            GameObject currentUI = humanLives[i].gameObject;
+            currentUI.SetActive(i < playerRoundScores[1]);
         }
     }
 }
