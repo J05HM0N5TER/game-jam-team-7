@@ -28,7 +28,8 @@ public class GameManager : MonoBehaviour
     public int defaultLeves = 3;
     private SceneController sceneController;
 
-
+    public GameObject blackhole;
+    public float timer = 60.0f;
     // Start is called before the first frame update
     void Start()
     {
@@ -40,6 +41,7 @@ public class GameManager : MonoBehaviour
             playerRoundScores.Add(defaultLeves);
         }
         Audio = gameObject.GetComponent<AudioSource>();
+        blackhole.GetComponent<GameObject>().SetActive(false);
     }
 
     // Update is called once per frame
@@ -70,7 +72,11 @@ public class GameManager : MonoBehaviour
                 //sceneController.loadGame();
             }
         }
-
+        timer -= Time.deltaTime;
+        if(timer <= 0.0f)
+        {
+            blackhole.SetActive(true);
+        }
     }
     IEnumerator spawnMeteor()
     {

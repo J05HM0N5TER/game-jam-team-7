@@ -879,9 +879,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   mainMenuScene: Main Menu
-  gameScene: testBuild
+  gameScene: FinalBuild
   winScreen: Win Screen
-  previousWinner: 0
+  previousLoss: 0
   winAmount: 3
 --- !u!4 &1627575414
 Transform:
